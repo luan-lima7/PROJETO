@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produtividade | Fevereiro 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        * {
+            cursor: default;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+            background:
+                linear-gradient(
+                    rgba(29, 78, 108, 0.218),
+                    rgba(51, 89, 118, 0.355)
+                ),
+                url("https://th.bing.com/th/id/OIP.JDvNtpAxUsMVmCIRhd8mFAHaEK?w=330&h=186&c=7&r=0&o=7&dpr=1.3&pid=1.7&rm=3");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(10px, 2vw, 20px) clamp(15px, 3vw, 40px);
+            background: rgb(10, 35, 81);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.1);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: clamp(20px, 3.5vw, 42px);
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .logo {
+            font-size: clamp(18px, 2.5vw, 32px);
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 2px;
+            text-align: right;
+        }
+
+        .logo span {
+            font-size: clamp(12px, 1.2vw, 18px);
+            letter-spacing: 1px;
+        }
+
+        .upload-section {
+            background: rgba(255, 51, 51, 0.9);
+            padding: clamp(10px, 2vw, 15px) clamp(15px, 3vw, 30px);
+            margin: clamp(10px, 2vw, 20px) clamp(15px, 3vw, 40px);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .upload-section > div:first-child {
+            font-size: clamp(14px, 1.5vw, 16px);
+            font-weight: bold;
+        }
+
+        .upload-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .upload-btn {
+            background: white;
+            color: #ff3333;
+            padding: clamp(8px, 1.2vw, 12px) clamp(15px, 2vw, 25px);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: clamp(12px, 1.2vw, 14px);
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .upload-btn:hover {
+            background: #f0f0f0;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .section {
+            padding: clamp(15px, 3vw, 30px) clamp(15px, 3vw, 40px);
+        }
+
+        .section-header {
+            font-size: clamp(22px, 3vw, 36px);
+            font-weight: bold;
+            margin-bottom: clamp(15px, 2vw, 25px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .turno-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .turno-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .turno-btn.active {
+            background: #ff3333;
+            border-color: #ff3333;
+        }
+
+        .turno-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .meta-badge {
+            background: #ff3333;
+            padding: clamp(6px, 1vw, 8px) clamp(15px, 2vw, 20px);
+            border-radius: 5px;
+            font-size: clamp(20px, 2.5vw, 28px);
+            font-weight: bold;
+        }
+
+        .chart-area {
+            background: rgba(10, 35, 81, 0.854);
+            padding: clamp(15px, 2.5vw, 30px);
+            border-radius: 10px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            overflow-x: auto;
+        }
+
+        .bars-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            height: clamp(150px, 20vh, 250px);
+            margin-bottom: 10px;
+            gap: clamp(2px, 0.5vw, 8px);
+            min-width: 600px;
+        }
+
+        .bar-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            min-width: 15px;
+        }
+
+        .bar {
+            width: 100%;
+            background: #00ff66;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s ease;
+            position: relative;
+            min-height: 20px;
+        }
+
+        .bar.red {
+            background: #ff3333;
+        }
+
+        .bar.dsr {
+            background: #1a4580;
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -22px;
+            font-size: clamp(10px, 1.2vw, 14px);
+            font-weight: bold;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .bar-label {
+            margin-top: 5px;
+            font-size: clamp(10px, 1.1vw, 13px);
+            font-weight: bold;
+            color: white;
+        }
+
+        .stats-table {
+            width: 100%;
+            margin-top: 20px;
+            border-collapse: collapse;
+            background: rgba(10, 35, 81, 0.8);
+            font-size: clamp(10px, 1.1vw, 13px);
+            overflow-x: auto;
+            display: block;
+        }
+
+        .stats-table thead,
+        .stats-table tbody,
+        .stats-table tr {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+        .stats-table th,
+        .stats-table td {
+            padding: clamp(5px, 0.8vw, 8px) clamp(3px, 0.5vw, 5px);
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stats-table th {
+            background: rgba(26, 69, 128, 0.8);
+            font-weight: bold;
+        }
+
+        .stats-table .label-cell {
+            background: rgba(26, 69, 128, 0.9);
+            font-weight: bold;
+            text-align: left;
+            padding-left: clamp(8px, 1.5vw, 15px);
+            width: 120px;
+            min-width: 80px;
+        }
+
+        .dsr-cell {
+            background: rgba(26, 69, 128, 0.6);
+            font-weight: bold;
+        }
+
+        .cost-summary {
+            background: rgba(10, 35, 81, 0.9);
+            padding: clamp(15px, 2vw, 25px);
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .cost-summary h3 {
+            font-size: clamp(16px, 2vw, 22px);
+            margin-bottom: 15px;
+            color: #00ff66;
+            text-align: center;
+        }
+
+        .cost-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .cost-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #ff3333;
+        }
+
+        .cost-item .cost-label {
+            font-size: clamp(12px, 1.2vw, 14px);
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .cost-item .cost-value {
+            font-size: clamp(18px, 2.2vw, 26px);
+            font-weight: bold;
+            color: #00ff66;
+        }
+
+        .cost-item.highlight {
+            border-left-color: #00ff66;
+            background: rgba(0, 255, 102, 0.1);
+        }
+
+        .footer-note {
+            text-align: center;
+            padding: clamp(15px, 2vw, 20px);
+            font-size: clamp(11px, 1.2vw, 13px);
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .logo {
+                text-align: center;
+            }
+
+            .upload-section {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .upload-buttons {
+                justify-content: center;
+            }
+
+            .cost-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="title">PRODUTIVIDADE | FEVEREIRO 2026</div>
+        <div class="logo">
+            CEVA<br>
+            <span>LOGÍSTICS LTDA</span>
+        </div>
+    </div>
+
+    <div class="upload-section">
+        <div>📊 Importar dados do Excel</div>
+        <div class="upload-buttons">
+            <label for="fileInput" class="upload-btn">
+                📁 Selecionar Arquivo
+            </label>
+            <input type="file" id="fileInput" accept=".xlsx,.xls" onchange="handleFileUpload(event)">
+            <button class="upload-btn" onclick="downloadTemplate()">⬇️ Baixar Template</button>
+            <button class="upload-btn" onclick="useExampleData()">📝 Usar Dados de Exemplo</button>
+        </div>
+    </div>
+
+    <!-- ALMOXARIFADO -->
+    <div class="section">
+        <div class="section-header">
+            <span>ALMOXARIFADO</span>
+            <span class="meta-badge">META: <span id="almoxarifadoMeta">42</span></span>
+        </div>
+        
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('almoxarifado', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('almoxarifado', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="almoxarifadoBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="almoxarifadoStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="almoxarifadoTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="almoxarifadoTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="almoxarifadoTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="almoxarifadoCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- EXPEDIÇÃO -->
+    <div class="section">
+        <div class="section-header">
+            <span>EXPEDIÇÃO</span>
+            <span class="meta-badge">META: <span id="expedicaoMeta">42</span></span>
+        </div>
+        
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('expedicao', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('expedicao', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="expedicaoBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="expedicaoStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="expedicaoTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="expedicaoTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="expedicaoTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="expedicaoCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMPORTADOS -->
+    <div class="section">
+        <div class="section-header">
+            <span>IMPORTADOS</span>
+            <span class="meta-badge">META: <span id="importadosMeta">48</span></span>
+        </div>
+
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('importados', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('importados', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="importadosBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="importadosStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="importadosTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="importadosTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="importadosTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="importadosCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- BELEZA -->
+    <div class="section">
+        <div class="section-header">
+            <span>BELEZA</span>
+            <span class="meta-badge">META: <span id="belezaMeta">48</span></span>
+        </div>
+
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('beleza', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('beleza', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="belezaBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="belezaStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="belezaTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="belezaTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="belezaTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="belezaCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ARCO -->
+    <div class="section">
+        <div class="section-header">
+            <span>ARCO</span>
+            <span class="meta-badge">META: <span id="arcoMeta">48</span></span>
+        </div>
+
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('arco', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('arco', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="arcoBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="arcoStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="arcoTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="arcoTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="arcoTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="arcoCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ENCABIDADOS -->
+    <div class="section">
+        <div class="section-header">
+            <span>ENCABIDADOS</span>
+            <span class="meta-badge">META: <span id="encabidadosMeta">48</span></span>
+        </div>
+
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('encabidados', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('encabidados', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="encabidadosBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="encabidadosStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="encabidadosTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="encabidadosTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="encabidadosTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="encabidadosCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RFID -->
+    <div class="section">
+        <div class="section-header">
+            <span>RFID</span>
+            <span class="meta-badge">META: <span id="rfidMeta">48</span></span>
+        </div>
+
+        <div class="turno-selector">
+            <button class="turno-btn active" onclick="switchTurno('rfid', 1)">1º TURNO</button>
+            <button class="turno-btn" onclick="switchTurno('rfid', 2)">2º TURNO</button>
+        </div>
+
+        <div class="chart-area">
+            <div id="rfidBars" class="bars-container"></div>
+            <table class="stats-table">
+                <tbody id="rfidStats"></tbody>
+            </table>
+        </div>
+
+        <div class="cost-summary">
+            <h3>ANÁLISE DE CUSTOS</h3>
+            <div class="cost-grid">
+                <div class="cost-item">
+                    <div class="cost-label">Total de Missões</div>
+                    <div class="cost-value" id="rfidTotalMissoes">0</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Horas</div>
+                    <div class="cost-value" id="rfidTotalHoras">0h</div>
+                </div>
+                <div class="cost-item">
+                    <div class="cost-label">Total de Pessoas</div>
+                    <div class="cost-value" id="rfidTotalPessoas">0</div>
+                </div>
+                <div class="cost-item highlight">
+                    <div class="cost-label">Custo Total (R$ 7,36/h)</div>
+                    <div class="cost-value" id="rfidCustoTotal">R$ 0,00</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer-note">
+        * DSR = Descanso Semanal Remunerado | Dados atualizados automaticamente via Excel<br>
+        * Custo por hora: R$ 7,36 | Total de Pessoas = Total de Missões ÷ Meta
+    </div>
+
+    <script>
+        const VALOR_HORA = 7.36;
+
+        const setoresConfig = {
+            almoxarifado: { meta: 42 },
+            expedicao: { meta: 42 },
+            importados: { meta: 48 },
+            beleza: { meta: 48 },
+            arco: { meta: 48 },
+            encabidados: { meta: 48 },
+            rfid: { meta: 48 }
+        };
+
+        let dadosGlobais = {};
+
+        // Inicializar estrutura de dados
+        Object.keys(setoresConfig).forEach(setor => {
+            dadosGlobais[setor] = {
+                turno1: { missoes: [], horas: [], pessoas: 0, data: '' },
+                turno2: { missoes: [], horas: [], pessoas: 0, data: '' },
+                turnoAtual: 1
+            };
+        });
+
+        function calcularCustos(missoes, horas, meta) {
+            const diasTrabalhados = missoes.filter(m => m > 0);
+            const horasTrabalhadas = horas.filter((h, i) => missoes[i] > 0);
+
+            const totalMissoes = diasTrabalhados.reduce((acc, val) => acc + val, 0);
+            const totalHoras = horasTrabalhadas.reduce((acc, val) => acc + val, 0);
+            const totalPessoas = Math.ceil(totalMissoes / meta);
+            const custoTotal = totalHoras * VALOR_HORA * totalPessoas;
+
+            return { totalMissoes, totalHoras, totalPessoas, custoTotal };
+        }
+
+        function atualizarResumo(setor, missoes, horas, meta) {
+            const custos = calcularCustos(missoes, horas, meta);
+            
+            document.getElementById(`${setor}TotalMissoes`).textContent = custos.totalMissoes;
+            document.getElementById(`${setor}TotalHoras`).textContent = custos.totalHoras + 'h';
+            document.getElementById(`${setor}TotalPessoas`).textContent = custos.totalPessoas;
+            document.getElementById(`${setor}CustoTotal`).textContent = 
+                'R$ ' + custos.custoTotal.toFixed(2).replace('.', ',');
+        }
+
+        function switchTurno(setor, turno) {
+            dadosGlobais[setor].turnoAtual = turno;
+            
+            const sections = document.querySelectorAll('.section');
+            const setorIndex = Object.keys(setoresConfig).indexOf(setor);
+            const section = sections[setorIndex];
+            const buttons = section.querySelectorAll('.turno-btn');
+            
+            buttons.forEach((btn, idx) => {
+                if (idx + 1 === turno) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const dados = turno === 1 ? dadosGlobais[setor].turno1 : dadosGlobais[setor].turno2;
+            const meta = setoresConfig[setor].meta;
+            
+            createBars(`${setor}Bars`, dados.missoes, dados.horas, meta);
+            updateStatsTable(`${setor}Stats`, dados.missoes, dados.horas);
+            atualizarResumo(setor, dados.missoes, dados.horas, meta);
+        }
+
+        function createBars(containerId, missoes, horas, meta) {
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+
+            const maxValue = Math.max(...missoes, meta);
+
+            missoes.forEach((missao, index) => {
+                const wrapper = document.createElement('div');
+                wrapper.className = 'bar-wrapper';
+
+                const bar = document.createElement('div');
+                bar.className = 'bar';
+                
+                if (missao === 0) {
+                    bar.classList.add('dsr');
+                    bar.style.height = '30px';
+                } else if (missao < meta) {
+                    bar.classList.add('red');
+                    bar.style.height = `${(missao / maxValue) * 100}%`;
+                } else {
+                    bar.style.height = `${(missao / maxValue) * 100}%`;
+                }
+
+                const value = document.createElement('div');
+                value.className = 'bar-value';
+                value.textContent = missao === 0 ? 'DSR' : missao;
+                bar.appendChild(value);
+
+                const label = document.createElement('div');
+                label.className = 'bar-label';
+                label.textContent = index + 1;
+
+                wrapper.appendChild(bar);
+                wrapper.appendChild(label);
+                container.appendChild(wrapper);
+            });
+        }
+
+        function updateStatsTable(tableId, missoes, horas) {
+            const table = document.getElementById(tableId);
+            
+            let html = '<tr><th class="label-cell">DIA</th>';
+            missoes.forEach((m, i) => {
+                html += `<th>${i + 1}</th>`;
+            });
+            html += '</tr>';
+
+            html += '<tr><th class="label-cell">Missões</th>';
+            missoes.forEach((m) => {
+                if (m === 0) {
+                    html += '<td class="dsr-cell">DSR</td>';
+                } else {
+                    html += `<td>${m}</td>`;
+                }
+            });
+            html += '</tr>';
+
+            html += '<tr><th class="label-cell">Horas</th>';
+            horas.forEach((h) => {
+                if (h === 0) {
+                    html += '<td class="dsr-cell">DSR</td>';
+                } else {
+                    html += `<td>${h}</td>`;
+                }
+            });
+            html += '</tr>';
+
+            table.innerHTML = html;
+        }
+
+        function timeToNumber(value) {
+            if (typeof value === 'number' && value < 1) {
+                return Math.round(value * 24);
+            }
+            if (typeof value === 'object' && value.getHours) {
+                return value.getHours();
+            }
+            return parseInt(value) || 0;
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+
+                    Object.keys(setoresConfig).forEach(setor => {
+                        const sheetName = setor.charAt(0).toUpperCase() + setor.slice(1);
+                        if (workbook.SheetNames.includes(sheetName)) {
+                            const sheet = workbook.Sheets[sheetName];
+                            processSheetData(sheet, setor);
+                        }
+                    });
+
+                    Object.keys(setoresConfig).forEach(setor => {
+                        switchTurno(setor, dadosGlobais[setor].turnoAtual);
+                    });
+
+                    alert('✅ Dados importados com sucesso!');
+                } catch (error) {
+                    alert('❌ Erro ao processar arquivo: ' + error.message);
+                    console.error(error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function processSheetData(sheet, setor) {
+            const range = XLSX.utils.decode_range(sheet['!ref']);
+            
+            const turno1 = { missoes: [], horas: [], pessoas: 0, data: '' };
+            const turno2 = { missoes: [], horas: [], pessoas: 0, data: '' };
+
+            let col1Turno1 = -1, col1Turno2 = -1;
+            let startRow = -1;
+
+            for (let R = range.s.r; R <= range.e.r; R++) {
+                for (let C = range.s.c; C <= range.e.c; C++) {
+                    const cell = sheet[XLSX.utils.encode_cell({r: R, c: C})];
+                    if (cell && cell.v) {
+                        const value = cell.v.toString().toUpperCase();
+                        if (value.includes('1º TURNO')) {
+                            col1Turno1 = C;
+                        }
+                        if (value.includes('2º TURNO')) {
+                            col1Turno2 = C;
+                        }
+                        if (value === 'DIA' && startRow === -1) {
+                            startRow = R + 1;
+                        }
+                    }
+                }
+            }
+
+            for (let R = startRow; R <= range.e.r && R < startRow + 31; R++) {
+                if (col1Turno1 >= 0) {
+                    const missoesCell = sheet[XLSX.utils.encode_cell({r: R, c: col1Turno1 + 1})];
+                    const horasCell = sheet[XLSX.utils.encode_cell({r: R, c: col1Turno1 + 2})];
+
+                    const missoes = missoesCell ? (parseInt(missoesCell.v) || 0) : 0;
+                    const horas = horasCell ? timeToNumber(horasCell.v) : 0;
+
+                    turno1.missoes.push(missoes);
+                    turno1.horas.push(horas);
+                }
+
+                if (col1Turno2 >= 0) {
+                    const missoesCell = sheet[XLSX.utils.encode_cell({r: R, c: col1Turno2 + 1})];
+                    const horasCell = sheet[XLSX.utils.encode_cell({r: R, c: col1Turno2 + 2})];
+
+                    const missoes = missoesCell ? (parseInt(missoesCell.v) || 0) : 0;
+                    const horas = horasCell ? timeToNumber(horasCell.v) : 0;
+
+                    turno2.missoes.push(missoes);
+                    turno2.horas.push(horas);
+                }
+            }
+
+            while (turno1.missoes.length < 31) {
+                turno1.missoes.push(0);
+                turno1.horas.push(0);
+            }
+            while (turno2.missoes.length < 31) {
+                turno2.missoes.push(0);
+                turno2.horas.push(0);
+            }
+
+            dadosGlobais[setor].turno1 = turno1;
+            dadosGlobais[setor].turno2 = turno2;
+        }
+
+        function useExampleData() {
+            const exemploMissoes1 = [0,0,0,0,0,42,43,42,43,0,0,43,43,42,43,42,0,0,42,42,43,43,42,0,0,42,43,42,43,0,0];
+            const exemploHoras1 = [0,0,0,0,0,35,21,23,32,0,0,24,24,40,30,26,0,0,36,33,30,37,38,0,0,19,33,34,39,0,0];
+
+            Object.keys(setoresConfig).forEach(setor => {
+                dadosGlobais[setor].turno1 = {
+                    missoes: [...exemploMissoes1],
+                    horas: [...exemploHoras1],
+                    pessoas: 5,
+                    data: '2026-02-01'
+                };
+                dadosGlobais[setor].turno2 = {
+                    missoes: [...exemploMissoes1],
+                    horas: [...exemploHoras1],
+                    pessoas: 5,
+                    data: '2026-02-01'
+                };
+            });
+
+            Object.keys(setoresConfig).forEach(setor => {
+                switchTurno(setor, 1);
+            });
+            
+            alert('✅ Dados de exemplo carregados!');
+        }
+
+        function downloadTemplate() {
+            const wb = XLSX.utils.book_new();
+
+            Object.keys(setoresConfig).forEach(setor => {
+                const sheetName = setor.charAt(0).toUpperCase() + setor.slice(1);
+                const meta = setoresConfig[setor].meta;
+                
+                const data = [
+                    ['SETOR:', sheetName, '', '', 'META DIÁRIA:', meta],
+                    ['DATA:', '01/02/2026', '', '', 'TOTAL PESSOAS T1:', 5],
+                    ['', '', '', '', 'TOTAL PESSOAS T2:', 5],
+                    [],
+                    ['', '1º TURNO', '', '', '', '2º TURNO', '', ''],
+                    ['', 'DIA', 'MISSÕES', 'HORAS', '', 'DIA', 'MISSÕES', 'HORAS']
+                ];
+
+                for (let i = 1; i <= 31; i++) {
+                    data.push(['', i, 0, 0, '', i, 0, 0]);
+                }
+
+                const ws = XLSX.utils.aoa_to_sheet(data);
+                XLSX.utils.book_append_sheet(wb, ws, sheetName);
+            });
+
+            XLSX.writeFile(wb, 'template_produtividade.xlsx');
+        }
+
+        window.onload = function() {
+            useExampleData();
+        };
+    </script>
+</body>
+</html>
