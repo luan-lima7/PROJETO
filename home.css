@@ -1,19 +1,43 @@
-
-
 * {
+    font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
-    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     cursor: default;
+    color: rgb(235, 0, 0);
 }
 
 body {
-    background-color: rgba(4, 39, 100, 0.9);
-    background-image: url(../image/slide_01_img_001.jpg);
-    background-size: 100%;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-blend-mode: overlay;
+    background-color: rgba(163, 181, 214, 0.333);
+    background-image: url('https://th.bing.com/th/id/R.e9d0c63f87307573a05497471b2699fa?rik=5rb1jgX4mOinzQ&pid=ImgRaw&r=0');
+    background-size: cover; 
+    background-position: center; 
+    background-repeat: no-repeat; 
+    
+    min-height: 100vh; 
+    width: 100vw;      
+    margin: 0;   
+    overflow: hidden; 
+}
+
+@keyframes pulsar {
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1) pulsar(0.8s infinite); 
+    }
+}
+
+
+.INV:hover, .kaisen:hover, .qhse:hover, .S5:hover, .KPI:hover, 
+.po:hover, .vsm:hover, .CI:hover, .org:hover {
+    animation: pulsar 0.8s infinite;
+}
+
+/* 4. Aplicando o efeito aos textos */
+.INV, .kaisen, .qhse, .S5, .KPI, .po, .vsm, .CI, .org,
+.invtxt:hover, .kistxt:hover, .qhtxt:hover, .s5txt:hover, 
+.kpitxt:hover, .potxt:hover, .vsmtxt:hover, .Citxt:hover, .Citxt2:hover, .orgtxt:hover {
+    animation: pulsarTexto 0.8s infinite;
 }
 .cubo1,
 .cubo2,
@@ -142,7 +166,7 @@ body {
     width: 390px;
     height: 390px;
     background-color: rgb(221, 10, 10);
-    bottom: -282px;
+    bottom: -350px;
     right: 230px;
     transform: rotate(45deg);
 }
@@ -150,7 +174,7 @@ body {
     width: 190px;
     height: 390px;
     background-color: rgb(221, 10, 10);
-    bottom: -210px;
+    bottom: -274px;
     right: 685px;
     transform: rotate(45deg);
 }
@@ -213,7 +237,7 @@ a {
 .qhse {
     position: absolute;
     z-index: 100;
-    bottom: 160px;
+    bottom: 110px;
     right: 225px;
     width: 120px;
 }
@@ -223,7 +247,7 @@ a {
     font-style: none;
     font-display: none;
     color: white;
-    bottom: 140px;
+    bottom: 75px;
     right: 200px;
     z-index: 100;
     font-weight: bold;
@@ -288,14 +312,14 @@ a {
 .KPI {
     position: absolute;
     z-index: 100;
-    bottom: 310px;
+    bottom: 240px;
     right: 360px;
     width: 115px;
 }
 .kpitxt {
     position: absolute;
     z-index: 100;
-    bottom: 270px;
+    bottom: 210px;
     right: 360px;
     font-weight: bold;
     color: white;
@@ -353,7 +377,7 @@ a {
 .CI {
     position: absolute;
     z-index: 100;
-    bottom: 170px;
+    bottom: 110px;
     right: 500px;
     width: 110px;
 }
@@ -361,7 +385,7 @@ a {
     position: absolute;
     z-index: 100;
     right: 490px;
-    bottom: 142px;
+    bottom: 80px;
     color: white;
     font-weight: bold;
     font-size: 20px;
@@ -370,22 +394,22 @@ a {
     position: absolute;
     z-index: 100;
     right: 520px;
-    bottom: 125px;
+    bottom: 60px;
     color: white;
     font-weight: bold;
     font-size: 20px;
 }
 .org {
     position: absolute;
-    bottom: 310px;
-    width: 120px;
+    bottom: 240px;
+    width: 130px;
     right: 645px;
     z-index: 100;
 }
 .orgtxt {
     position: absolute;
     z-index: 100;
-    bottom: 290px;
+    bottom: 210px;
     right: 620px;
     color: white;
     font-weight: bold;
@@ -784,5 +808,6 @@ a {
         color: white;
         font-weight: bold;
         font-size: 25px;
-}
+    }
+  
 }

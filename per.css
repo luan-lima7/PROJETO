@@ -2,24 +2,21 @@
     font-family: Arial, Helvetica, sans-serif;
     overflow: hidden;
     cursor: default;
-    color: white;
+    color: rgb(224, 60, 60);
 }
 body {
-    background-color: rgba(4, 39, 100, 0.9);
-    background-image: url(../image/slide_02_img_004.jpg);
+    background-color: rgba(36, 64, 111, 0.57);
+    background-image: url('https://www.upgrad.com/_ww3-next/image/?url=https:%2F%2Fd2o2utebsixu4k.cloudfront.net%2FIntroduction%20to%20Supply%20Chain%20Management%20(2hrs)-92a7c0ffb2574e8b8dd6d6c8edb36ae3.webp&w=3840&q=75');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-blend-mode: overlay;
 }
-a {
-    font-style: none;
-    text-decoration: none;
-}
+
 h1 {
     position: absolute;
     top: 2vh;
-    left: 10vh;
+    left: 1vh;
 }
 .PO,
 .PO2,
@@ -371,12 +368,12 @@ h1 {
 .line9,
 .line10,
 .line11 {
-    animation-delay: 3s;
-    animation: CarregarLinha 5s ease forwards;
+    animation-delay: 1s;
+    animation: CarregarLinha 1s ease forwards;
 }
 .line6,
 .line7 {
-    animation: CarregarLinha 5s ease forwards;
+    animation: CarregarLinha 1s ease forwards;
 }
 .PO,
 .PO2,
@@ -388,7 +385,7 @@ h1 {
 .nvl,
 .qua {
     color: transparent;
-    animation: AcenderTexto 5s ease forwards;
+    animation: AcenderTexto 1s ease forwards;
 }
 .PO,
 .PO2 {
@@ -402,13 +399,13 @@ h1 {
     animation-delay: 1s;
 }
 .prod1 {
-    animation-delay: 3s;
+    animation-delay: 1s;
 }
 .prod2 {
-    animation-delay: 3s;
+    animation-delay: 1s;
 }
 .poli1 {
-    animation: AcenderPoli 2s ease-in-out forwards;
+    animation: AcenderPoli 1s ease-in-out forwards;
 }
  
 .poli2,
@@ -416,12 +413,12 @@ h1 {
 .poli6,
 .poli7,
 .poli8 {
-    animation: AcenderPoli 7s ease-in-out forwards;
+    animation: AcenderPoli 1s ease-in-out forwards;
     cursor: pointer;
 }
 .poli3,
 .poli4 {
-    animation: AcenderPoli 7s ease-in-out forwards;
+    animation: AcenderPoli 1s ease-in-out forwards;
 }
 .POimg {
     animation: Revelar 0.2s ease-in-out forwards;
@@ -432,14 +429,14 @@ h1 {
 .nvlimg,
 .quaimg,
 .cvimg {
-    animation: Revelar 4s ease-in-out forwards;
-    animation-delay: 2s;
+    animation: Revelar 1s ease-in-out forwards;
+    animation-delay: 1s;
     cursor: pointer;
 }
 .prod1img,
 .prod2img {
-    animation: Revelar 3s ease-in-out forwards;
-    animation-delay: 2s;
+    animation: Revelar 1s ease-in-out forwards;
+    animation-delay: 1s;
     cursor: pointer;
 }
 .POimg,
@@ -485,4 +482,49 @@ h1 {
     to {
         opacity: 1;
     }
+}
+.footer {
+    background: var(--azul-escuro);
+    padding: 30px 40px;
+    margin-top: 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-voltar {
+    background: var(--vermelho);
+    color: var(--branco);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    font-weight: bold;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.btn-voltar:hover {
+    background: #ff3322;
+    transform: translateX(-5px);
+    box-shadow: 0 6px 15px rgba(228, 35, 19, 0.5);
+}
+
+.arrow {
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.btn-voltar:hover .arrow {
+    transform: translateX(-5px);
+}
+
+.footer-text {
+    color: var(--cinza-medio);
+    font-size: 0.9rem;
 }
